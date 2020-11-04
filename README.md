@@ -1,1 +1,1 @@
-# Stupid_K_Means
+Stupid K-means with brute force optimization
