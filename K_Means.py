@@ -69,24 +69,25 @@ def k_means_(X, cluster_count = 2, target = None):
     return clusters
 
 ''' Оболочка вокруг стандартного k-means для снижения чувствительности к 
-    начальной инициализации'''
+    начальной инициализации центроидов'''
 def K_Means(X, cluster_count = 2, target = None, optimizing_iterations = 5):
     cluster_marks = None
     def mean_inner_dist(cluster_marks, dataframe):
         mean_dist = 0
         for i in range(0, cluster_count):
-            tmp_cluster = []
+           tmp_cluster = []
             for obj_index, cluster_mark in enumerate(cluster_marks):
                 if (cluster_mark == i):
                     tmp_cluster.append(dataframe.iloc[obj_index])
             if (len(tmp_cluster) == 0):
-                return 10e8
+                return 10e24
             curr_mean = 0
-            rand_ind = random.choice([i for i in range(0, len(tmp_cluster))])
-            sample_0 = tmp_cluster[rand_ind]
-            '''Среднее внутрикластерное расстояние от случайной точки кластера'''
             for sample in tmp_cluster:
-                curr_mean += math.sqrt(sum(list(map(lambda x,y: (x-y)**2, sample, sample_0))))
+                for sample_ in tmp_cluster:
+                    curr_mean += math.sqrt(sum(list(map(lambda x, y: (x-y)**2, sample, sample_))))
+            '''
+            Метрика - среднее попарное расстояние между обьектами кластера
+            '''
             curr_mean /= len(tmp_cluster)
             mean_dist += curr_mean
         return mean_dist/cluster_count
